@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# pengurice: p3nguin-kun's auto rice script
+
+# audioCC
+# "$HOME"/.config/bspwm/bin/audio
+
+# terminate already running programs
+processes=("sxhkd" "polybar" "dunst")
+for process in "${processes[@]}"; do
+    if pgrep -x "$process" > /dev/null; then
+        killall -q "$process"
+    fi
+done
+
+# start sxhkd: keybind daemon
+sxhkd -c "$HOME"/.config/bspwm/config/keys &
+
+# config files
+"$HOME"/.config/bspwm/config/init &
+bspc config external_rules_command "$HOME"/.config/bspwm/config/external-rules &
+bspc config remove_disabled_monitors true
+bspc config borderless_monocle false
+bspc config gapless_monocle true
+bspc config focus_follows_pointer true
+
+
+# user's config
+"$HOME"/.config/bspwm/user/init &
